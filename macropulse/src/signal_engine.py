@@ -155,3 +155,78 @@ def analyze_narrative(market_analysis, rates_analysis):
         "narrative": narrative,
         "explanation": explanation
     }
+
+
+def analyze_labor(
+    actual_nfp,
+    forecast_nfp,
+    actual_unemployment,
+    forecast_unemployment,
+    actual_wages=None,
+    forecast_wages=None
+):
+
+    weak_score = 0
+    strong_score = 0
+    reasons = []
+
+    # NFP
+    if actual_nfp < forecast_nfp:
+        weak_score += 1
+        reasons.append(
+            f"NFP missed forecast: "
+            f"{actual_nfp}K vs {forecast_nfp}K"
+        )
+    else:
+        strong_score += 1
+        reasons.append(
+            f"NFP beat forecast: "
+            f"{actual_nfp}K vs {forecast_nfp}K"
+        )
+
+    # Unemployment
+    if actual_unemployment > forecast_unemployment:
+        weak_score += 1
+        reasons.append(
+            f"Unemployment higher than expected: "
+            f"{actual_unemployment}% vs "
+            f"{forecast_unemployment}%"
+        )
+    else:
+        strong_score += 1
+        reasons.append(
+            f"Unemployment at/below forecast: "
+            f"{actual_unemployment}%"
+        )
+
+    # Wages
+    if (
+        actual_wages is not None
+        and forecast_wages is not None
+    ):
+        if actual_wages < forecast_wages:
+            weak_score += 1
+            reasons.append(
+                "Wage growth was softer than expected"
+            )
+        else:
+            strong_score += 1
+            reasons.append(
+                "Wage growth was stronger than expected"
+            )
+
+    if weak_score > strong_score:
+        signal = "LABOR WEAKER THAN EXPECTED"
+
+    elif strong_score > weak_score:
+        signal = "LABOR STRONGER THAN EXPECTED"
+
+    else:
+        signal = "LABOR MIXED"
+
+    return {
+        "signal": signal,
+        "weak_score": weak_score,
+        "strong_score": strong_score,
+        "reasons": reasons
+    }

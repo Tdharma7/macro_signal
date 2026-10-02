@@ -1,6 +1,6 @@
 # Fetch market prices and Treasury yields
 import yfinance as yf
-from signal_engine import analyze_market
+from src.signal_engine import analyze_market
 from datetime import datetime, timedelta, timezone
 
 
@@ -38,7 +38,7 @@ def get_market_snapshot():
 if __name__ == "__main__":
 
     market_data = get_market_snapshot()
-
+    print(get_market_snapshot())
     print("\nMARKET DATA")
     print(market_data)
 
