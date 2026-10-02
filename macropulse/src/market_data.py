@@ -1,6 +1,8 @@
 # Fetch market prices and Treasury yields
 import yfinance as yf
 from signal_engine import analyze_market
+from datetime import datetime, timedelta, timezone
+
 
 TICKERS = {
     "S&P 500": "^GSPC",
@@ -27,8 +29,9 @@ def get_market_snapshot():
 
         results[name] = {
             "value": round(float(current), 2),
-            "change_pct": round(float(change_pct), 2)
-        }
+            "change_pct": round(float(change_pct), 2),
+            "timestamp": datetime.now(timezone.utc).isoformat()
+}
 
     return results
 
